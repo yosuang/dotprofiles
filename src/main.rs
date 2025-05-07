@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 use env_logger::Env;
-use log::{debug, info, LevelFilter};
+use log::{LevelFilter, debug, info};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
