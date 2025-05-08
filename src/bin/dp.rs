@@ -1,5 +1,7 @@
+use std::str::FromStr;
+
 use clap::{Parser, Subcommand};
-use env_logger::Env;
+use dotprofilers::{DefaultConfigFilePath, config::Config};
 use log::{LevelFilter, debug, info};
 
 #[derive(Parser, Debug)]
@@ -31,14 +33,20 @@ const BIN_NAME: &str = env!("CARGO_BIN_NAME");
 fn main() {
     let cli = Cli::parse();
 
-    let mut builder =
-        env_logger::Builder::from_env(Env::default().default_filter_or(format!("{BIN_NAME}=info")));
+    let configuration: Config =
+        Config::load(&DefaultConfigFilePath).unwrap_or(Config::default_config());
+
+    let mut builder = env_logger::builder();
     if cli.verbose {
         builder.filter(Some(BIN_NAME), LevelFilter::Debug);
-    };
+    } else if let Ok(level) = LevelFilter::from_str(&configuration.log_level) {
+        builder.filter(Some(BIN_NAME), level);
+    } else {
+        builder.filter(Some(BIN_NAME), LevelFilter::Info);
+    }
     builder.init();
 
-    debug!("args:{cli:?}");
+    debug!("{cli:?}");
 
     match cli.command {
         Command::Activate(activate) => {
