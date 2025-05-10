@@ -2,8 +2,8 @@ use std::process;
 use std::str::FromStr;
 
 use clap::{Parser, Subcommand};
-use dotprofilers::{DefaultConfigFilePath, config::Config};
-use dotprofilers_pkgmgmt::{PackageManager, Scoop};
+use dotprofiles::{DefaultConfigFilePath, config::Config};
+use dotprofiles_pkgmgmt::{PackageManager, Scoop};
 use log::{LevelFilter, debug, error, info};
 
 #[derive(Parser, Debug)]

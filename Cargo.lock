@@ -147,13 +147,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "dotprofilers"
+name = "dotprofiles"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
  "dirs-next",
- "dotprofilers-pkgmgmt",
+ "dotprofiles-pkgmgmt",
  "env_logger",
  "lazy_static",
  "log",
@@ -162,7 +162,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dotprofilers-pkgmgmt"
+name = "dotprofiles-pkgmgmt"
 version = "0.1.0"
 
 [[package]]
