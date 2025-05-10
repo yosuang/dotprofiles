@@ -150,8 +150,10 @@ dependencies = [
 name = "dotprofiles"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "clap",
  "dotprofiles-config",
+ "dotprofiles-pkgmgmt",
  "env_logger",
  "log",
 ]
@@ -171,6 +173,10 @@ dependencies = [
 [[package]]
 name = "dotprofiles-pkgmgmt"
 version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dotprofiles-config",
+]
 
 [[package]]
 name = "env_filter"

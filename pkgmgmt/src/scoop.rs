@@ -1,9 +1,8 @@
+use crate::{PackageManage, PackageManagerInfo};
 use std::{
     path::PathBuf,
     process::{Command, Stdio},
 };
-
-use crate::package_manager::{PackageManager, PackageManagerInfo};
 
 pub struct Scoop {
     executable_path: PathBuf,
@@ -17,7 +16,7 @@ impl Scoop {
     }
 }
 
-impl PackageManager for Scoop {
+impl PackageManage for Scoop {
     fn info(&self) -> PackageManagerInfo {
         PackageManagerInfo {
             name: String::from("Scoop"),

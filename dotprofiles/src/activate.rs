@@ -2,11 +2,11 @@ use clap::Parser;
 use log::info;
 
 #[derive(Parser, Debug)]
-pub struct Activate {
+pub struct ActivateSubCommand {
     profiles: String,
 }
 
-pub fn handle_activate(activate: &Activate) -> Result<(), &'static str> {
+pub fn run_activate(activate: ActivateSubCommand) -> anyhow::Result<()> {
     info!("Activating profiles: {:?}", activate);
     Ok(())
 }

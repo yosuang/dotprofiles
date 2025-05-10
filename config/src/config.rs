@@ -8,6 +8,7 @@ use std::path::PathBuf;
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Config {
     pub log_level: String,
+    pub package_manager: Option<String>,
     pub scoop: Option<ScoopConfig>,
 }
 
@@ -20,6 +21,7 @@ impl Config {
     pub fn default() -> Self {
         Config {
             log_level: LevelFilter::Info.to_string(),
+            package_manager: None,
             scoop: None,
         }
     }

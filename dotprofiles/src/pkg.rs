@@ -1,18 +1,22 @@
+mod info;
+
 use clap::{Parser, Subcommand};
-use log::info;
+use dotprofiles_config::config::Config;
 
 #[derive(Parser, Debug)]
-pub struct Package {
+pub struct PkgSubCommand {
     #[clap(subcommand)]
     command: PackageCommand,
 }
 
 #[derive(Subcommand, Debug)]
 pub enum PackageCommand {
-    Info,
+    Info(info::Info),
 }
 
-pub fn handle_package(package: &Package) -> Result<(), &'static str> {
-    info!("Processing package: {:?}", package);
-    Ok(())
+pub fn run_package(cmd: PkgSubCommand, config: &Config) -> anyhow::Result<()> {
+    let pm = dotprofiles_pkgmgmt::build_package_manager(config)?;
+    match cmd.command {
+        PackageCommand::Info(cmd) => cmd.run(pm),
+    }
 }

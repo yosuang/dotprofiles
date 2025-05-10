@@ -4,10 +4,11 @@ mod pkg;
 use std::str::FromStr;
 use std::{fmt::Debug, process};
 
-use crate::activate::{Activate, handle_activate};
-use crate::pkg::{Package, handle_package};
+use crate::activate::ActivateSubCommand;
+use crate::pkg::PkgSubCommand;
 use clap::{Parser, Subcommand};
-use dotprofiles_config::config::{Config, parse_config};
+use dotprofiles_config::config;
+use dotprofiles_config::config::Config;
 use log::{LevelFilter, debug, error};
 
 #[derive(Parser, Debug)]
@@ -17,24 +18,24 @@ struct Cli {
     verbose: bool,
 
     #[clap(subcommand)]
-    command: Command,
+    sub: SubCommand,
 }
 
 #[derive(Subcommand, Debug)]
-enum Command {
-    Activate(Activate),
-    Package(Package),
+enum SubCommand {
+    Activate(ActivateSubCommand),
+    Pkg(PkgSubCommand),
 }
 
 const BIN_NAME: &str = env!("CARGO_BIN_NAME");
 
 fn main() {
     let cli = Cli::parse();
-    let configuration = parse_config();
+    let config = config::parse_config();
 
-    init_logger(&cli, &configuration);
+    init_logger(&cli, &config);
 
-    debug!("{configuration:?}");
+    debug!("{config:?}");
     debug!("{cli:?}");
 
     if let Err(e) = run(cli) {
@@ -55,9 +56,9 @@ fn init_logger(cli: &Cli, configuration: &Config) {
     builder.init();
 }
 
-fn run(cli: Cli) -> Result<(), &'static str> {
-    match cli.command {
-        Command::Activate(activate) => handle_activate(&activate),
-        Command::Package(package) => handle_package(&package),
+fn run(cli: Cli) -> anyhow::Result<()> {
+    match cli.sub {
+        SubCommand::Activate(activate) => activate::run_activate(activate),
+        SubCommand::Pkg(pkg) => pkg::run_package(pkg, &config::parse_config()),
     }
 }
