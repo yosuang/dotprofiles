@@ -161,9 +161,7 @@ name = "dotprofiles-config"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "clap",
  "dirs-next",
- "env_logger",
  "lazy_static",
  "log",
  "serde",
