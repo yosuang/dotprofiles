@@ -4,15 +4,22 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Config {
     pub log_level: String,
+    pub scoop: Option<ScoopConfig>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ScoopConfig {
+    pub executable_path: String,
 }
 
 impl Config {
-    pub fn default_config() -> Config {
+    pub fn default() -> Self {
         Config {
             log_level: LevelFilter::Info.to_string(),
+            scoop: None,
         }
     }
 

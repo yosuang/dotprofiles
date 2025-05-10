@@ -1,9 +1,8 @@
-use std::process;
 use std::str::FromStr;
+use std::{fmt::Debug, process};
 
 use clap::{Parser, Subcommand};
 use dotprofiles::{DefaultConfigFilePath, config::Config};
-use dotprofiles_pkgmgmt::{PackageManager, Scoop};
 use log::{LevelFilter, debug, error, info};
 
 #[derive(Parser, Debug)]
@@ -38,10 +37,9 @@ fn main() {
 
     init_logger(&cli, &configuration);
 
-    let scoop_info = Scoop::new().info();
-    info!("{:?}", scoop_info);
-
+    debug!("{configuration:?}");
     debug!("{cli:?}");
+
     if let Err(e) = run(cli) {
         error!("Run failed, err:{:?}", e);
         process::exit(1);
@@ -61,7 +59,7 @@ fn init_logger(cli: &Cli, configuration: &Config) {
 }
 
 fn parse_config() -> Config {
-    Config::load(&DefaultConfigFilePath).unwrap_or(Config::default_config())
+    Config::load(&DefaultConfigFilePath).unwrap_or(Config::default())
 }
 
 fn run(cli: Cli) -> Result<(), &'static str> {
