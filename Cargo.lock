@@ -150,10 +150,19 @@ dependencies = [
 name = "dotprofiles"
 version = "0.1.0"
 dependencies = [
+ "clap",
+ "dotprofiles-config",
+ "env_logger",
+ "log",
+]
+
+[[package]]
+name = "dotprofiles-config"
+version = "0.1.0"
+dependencies = [
  "anyhow",
  "clap",
  "dirs-next",
- "dotprofiles-pkgmgmt",
  "env_logger",
  "lazy_static",
  "log",

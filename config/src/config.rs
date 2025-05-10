@@ -1,3 +1,4 @@
+use crate::DefaultConfigFilePath;
 use anyhow::{Error, anyhow};
 use log::LevelFilter;
 use serde::{Deserialize, Serialize};
@@ -36,4 +37,8 @@ impl Config {
         let config_str = fs::read_to_string(config_path)?;
         toml::from_str(&config_str).map_err(|e| e.into())
     }
+}
+
+pub fn parse_config() -> Config {
+    Config::load(&DefaultConfigFilePath).unwrap_or(Config::default())
 }
