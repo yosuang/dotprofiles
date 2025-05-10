@@ -3,6 +3,7 @@ use std::str::FromStr;
 
 use clap::{Parser, Subcommand};
 use dotprofilers::{DefaultConfigFilePath, config::Config};
+use dotprofilers_pkgmgmt::{PackageManager, Scoop};
 use log::{LevelFilter, debug, error, info};
 
 #[derive(Parser, Debug)]
@@ -36,6 +37,9 @@ fn main() {
     let configuration = parse_config();
 
     init_logger(&cli, &configuration);
+
+    let scoop_info = Scoop::new().info();
+    info!("{:?}", scoop_info);
 
     debug!("{cli:?}");
     if let Err(e) = run(cli) {

@@ -153,12 +153,17 @@ dependencies = [
  "anyhow",
  "clap",
  "dirs-next",
+ "dotprofilers-pkgmgmt",
  "env_logger",
  "lazy_static",
  "log",
  "serde",
  "toml",
 ]
+
+[[package]]
+name = "dotprofilers-pkgmgmt"
+version = "0.1.0"
 
 [[package]]
 name = "env_filter"
