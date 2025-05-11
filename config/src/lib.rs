@@ -9,6 +9,7 @@ lazy_static! {
         dirs_next::home_dir().expect("Failed to obtain user's home directory");
     pub static ref DefaultConfigFilePath: PathBuf =
         HomeDir.join(".config").join("dotprofiles.toml");
+    pub static ref WorkspaceDir: PathBuf = HomeDir.join("dotprofiles");
 }
 
 pub fn parse_config() -> Config {

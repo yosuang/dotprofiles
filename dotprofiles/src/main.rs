@@ -1,15 +1,16 @@
 mod activate;
+mod apply;
 mod pkg;
-
-use std::str::FromStr;
-use std::{fmt::Debug, process};
 
 use crate::activate::ActivateSubCommand;
 use crate::pkg::PkgSubCommand;
+use apply::ApplySubCommand;
 use clap::{Parser, Subcommand};
 use dotprofiles_config::config;
 use dotprofiles_config::config::Config;
 use log::{LevelFilter, debug, error};
+use std::str::FromStr;
+use std::{fmt::Debug, process};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -25,6 +26,7 @@ struct Cli {
 enum SubCommand {
     Activate(ActivateSubCommand),
     Pkg(PkgSubCommand),
+    Apply(ApplySubCommand),
 }
 
 const BIN_NAME: &str = env!("CARGO_BIN_NAME");
@@ -62,5 +64,6 @@ fn run(cli: Cli) -> anyhow::Result<()> {
     match cli.sub {
         SubCommand::Activate(activate) => activate::run_activate(activate),
         SubCommand::Pkg(pkg) => pkg::run_package(pkg, &config::parse_config()),
+        SubCommand::Apply(cmd) => apply::run_apply(cmd),
     }
 }
