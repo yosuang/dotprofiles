@@ -48,8 +48,10 @@ fn init_logger(cli: &Cli, configuration: &Config) {
     let mut builder = env_logger::builder();
     if cli.verbose {
         builder.filter(Some(BIN_NAME), LevelFilter::Debug);
-    } else if let Ok(level) = LevelFilter::from_str(configuration.log_level.as_str()) {
-        builder.filter(Some(BIN_NAME), level);
+    } else if let Some(log_level) = &configuration.log_level {
+        if let Ok(log_level) = LevelFilter::from_str(&log_level) {
+            builder.filter(Some(BIN_NAME), log_level);
+        }
     } else {
         builder.filter(Some(BIN_NAME), LevelFilter::Info);
     }

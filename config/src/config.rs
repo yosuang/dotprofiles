@@ -1,13 +1,12 @@
 use crate::DefaultConfigFilePath;
 use anyhow::{Error, anyhow};
-use log::LevelFilter;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Config {
-    pub log_level: String,
+    pub log_level: Option<String>,
     pub package_manager: Option<String>,
     pub scoop: Option<ScoopConfig>,
 }
@@ -20,7 +19,7 @@ pub struct ScoopConfig {
 impl Config {
     pub fn default() -> Self {
         Config {
-            log_level: LevelFilter::Info.to_string(),
+            log_level: None,
             package_manager: None,
             scoop: None,
         }
