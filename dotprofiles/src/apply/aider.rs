@@ -20,7 +20,7 @@ impl Aider {
                 }
             }
         } else {
-            println!("Directory not exist!")
+            println!("aider does not exist!")
         }
         Ok(())
     }
