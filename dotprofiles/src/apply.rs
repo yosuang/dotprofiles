@@ -22,7 +22,7 @@ pub fn run_apply(cmd: ApplySubCommand) -> anyhow::Result<()> {
 }
 
 fn list_group_paths() -> Vec<PathBuf> {
-    let workspace_dir = dotprofiles_config::WorkspaceDir.as_path();
+    let workspace_dir = config::WorkspaceDir.as_path();
     let mut groups = Vec::new();
 
     if let Ok(entries) = fs::read_dir(workspace_dir) {

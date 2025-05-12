@@ -1,7 +1,7 @@
 mod info;
 
 use clap::{Parser, Subcommand};
-use dotprofiles_config::config::Config;
+use config::config::Config;
 
 #[derive(Parser, Debug)]
 pub struct PkgSubCommand {

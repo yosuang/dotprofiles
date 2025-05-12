@@ -8,6 +8,5 @@ clap.workspace = true
 log.workspace = true
 env_logger.workspace = true
 anyhow.workspace = true
-
-dotprofiles-config.workspace = true
+config.workspace = true
 dotprofiles-pkgmgmt.workspace = true

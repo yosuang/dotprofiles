@@ -1,5 +1,5 @@
 [workspace]
-members = ["dotprofiles", "config", "pkgmgmt"]
+members = ["dotprofiles", "config", "dotprofiles-pkgmgmt"]
 resolver = "3"
 
 [workspace.dependencies]
@@ -11,5 +11,5 @@ dirs-next = "2.0.0"
 toml = "0.8.22"
 serde = { version = "1.0.219", features = ["derive"] }
 anyhow = "1.0.98"
-dotprofiles-config = { path = "config" }
-dotprofiles-pkgmgmt = { path = "pkgmgmt" }
+config = { path = "config" }
+dotprofiles-pkgmgmt = { path = "dotprofiles-pkgmgmt" }

@@ -2,7 +2,7 @@ mod scoop;
 
 pub use scoop::*;
 
-use dotprofiles_config::config::Config;
+use config::config::Config;
 
 use crate::Scoop;
 
