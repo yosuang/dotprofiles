@@ -1,10 +1,12 @@
 mod apply;
+mod list;
 mod pkg;
 
 use crate::pkg::PkgSubCommand;
 use apply::ApplySubCommand;
 use clap::{Parser, Subcommand};
 use config::config::Config;
+use list::ListSubCommand;
 use log::{LevelFilter, debug};
 use std::str::FromStr;
 use std::{fmt::Debug, process};
@@ -20,6 +22,7 @@ struct Cli {
 enum SubCommand {
     Pkg(PkgSubCommand),
     Apply(ApplySubCommand),
+    List(ListSubCommand),
 }
 
 fn main() {
@@ -54,5 +57,6 @@ fn run(cli: Cli) -> anyhow::Result<()> {
     match cli.command {
         SubCommand::Pkg(pkg) => pkg::run_package(pkg, &config::parse_config()),
         SubCommand::Apply(cmd) => apply::run_apply(cmd),
+        SubCommand::List(cmd) => list::run_list(cmd),
     }
 }
