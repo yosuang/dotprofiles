@@ -2,19 +2,19 @@ mod apply;
 mod list;
 mod pkg;
 
-use crate::pkg::PkgSubCommand;
 use apply::ApplySubCommand;
 use clap::{Parser, Subcommand};
 use config::config::Config;
 use list::ListSubCommand;
 use log::{LevelFilter, debug};
+use pkg::PkgSubCommand;
 use std::str::FromStr;
 use std::{fmt::Debug, process};
 
 #[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)]
+#[command(author, version, about, long_about = None)]
 struct Cli {
-    #[clap(subcommand)]
+    #[command(subcommand)]
     command: SubCommand,
 }
 

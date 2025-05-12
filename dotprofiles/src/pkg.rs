@@ -5,7 +5,7 @@ use config::config::Config;
 
 #[derive(Parser, Debug)]
 pub struct PkgSubCommand {
-    #[clap(subcommand)]
+    #[command(subcommand)]
     command: PackageCommand,
 }
 
