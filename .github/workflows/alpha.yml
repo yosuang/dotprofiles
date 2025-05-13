@@ -55,7 +55,29 @@ jobs:
               }
             }
 
+  update-tag:
+    runs-on: ubuntu-latest
+    needs: delete-old-assets
+    steps:
+      - run: |
+          echo "BUILDTIME=$(TZ=Asia/Shanghai date)" >> $GITHUB_ENV
+        shell: bash
+      - run: |
+          cat > release.txt << EOF
+          **Created At: ${{ env.BUILDTIME }}**
+          EOF
+      - name: "Upload Release"
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: alpha
+          name: "dotprofiles-alpha"
+          body_path: release.txt
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: true
+
   alpha-for-windows:
+    needs: update-tag
     strategy:
       fail-fast: false
       matrix:
