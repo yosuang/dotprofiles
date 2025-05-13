@@ -25,7 +25,7 @@ fn apply_profiles_of(app: &str) -> anyhow::Result<()> {
             }
         }
     } else {
-        println!("{} does not exist!", app)
+        println!("App profiles of '{}' does not exist.", app)
     }
     Ok(())
 }

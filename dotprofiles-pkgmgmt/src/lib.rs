@@ -19,11 +19,13 @@ pub fn build_package_manager(config: &Config) -> anyhow::Result<impl PackageMana
             ));
         }
         return Err(anyhow::anyhow!(
-            "unsupported 'package_manager': {}",
+            "Invalid value '{}' of configure option 'package_manager'.",
             pm_name
         ));
     }
-    Err(anyhow::anyhow!("'package_manager' does not exist'"))
+    Err(anyhow::anyhow!(
+        "Configure option 'package_manager' does not exist."
+    ))
 }
 
 #[derive(Debug)]
