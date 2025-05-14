@@ -1,72 +1,81 @@
+use anyhow::anyhow;
 use clap::Parser;
+use config::config::Config;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[derive(Parser, Debug)]
 pub struct ApplySubCommand {
     app: String,
 }
 
-pub fn run_apply(cmd: ApplySubCommand) -> anyhow::Result<()> {
-    apply_profiles_of(cmd.app.as_str())
+pub fn run_apply(cmd: ApplySubCommand, config: &Config) -> anyhow::Result<()> {
+    let matched_apps = find_app(&cmd.app, config)?;
+    let app = match matched_apps.len() {
+        0 => {
+            println!("No matched app");
+            None
+        }
+        1 => matched_apps.into_iter().next(),
+        _ => {
+            println!(
+                "Multiple apps matched: {}",
+                matched_apps
+                    .iter()
+                    .map(|p| p.file_name().unwrap().to_string_lossy())
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            );
+            None
+        }
+    };
+    match app {
+        Some(app_path) => apply_profiles_of(app_path, config),
+        None => Ok(()),
+    }
 }
 
-fn apply_profiles_of(app: &str) -> anyhow::Result<()> {
-    let aider_dir: Option<PathBuf> = find_app_profiles_like(app)?;
-    if let Some(src_dir) = aider_dir {
-        let current_dir = std::env::current_dir()?;
+fn apply_profiles_of(app_path: impl AsRef<Path>, _config: &Config) -> anyhow::Result<()> {
+    if !app_path.as_ref().exists() {
+        return Err(anyhow!("App does not exist"));
+    }
 
-        for entry in fs::read_dir(src_dir)? {
-            let entry = entry?;
-            let path = entry.path();
-            if path.is_file() {
-                let dest_path = current_dir.join(entry.file_name());
-                fs::copy(path, dest_path)?;
-            }
+    let current_dir = std::env::current_dir()?;
+    for entry in fs::read_dir(app_path)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_file() {
+            let dest_path = current_dir.join(entry.file_name());
+            fs::copy(path, dest_path)?;
         }
-    } else {
-        println!("App profiles of '{}' does not exist.", app)
     }
     Ok(())
 }
 
-fn find_app_profiles_like(name: &str) -> anyhow::Result<Option<PathBuf>> {
-    let group_paths: Vec<PathBuf> = list_app_profiles()
+fn find_app(app_name: &str, config: &Config) -> anyhow::Result<Vec<PathBuf>> {
+    let matched_apps: Vec<PathBuf> = list_apps(config)?
         .into_iter()
         .filter(|path| {
-            path.file_name().map_or(false, |filename| {
-                filename.to_string_lossy().to_lowercase() == name.to_lowercase()
-            })
+            path.file_name()
+                .map_or(false, |filename| filename.to_string_lossy() == app_name)
         })
         .collect();
-
-    match group_paths.len() {
-        0 => Ok(None),
-        1 => Ok(group_paths.into_iter().next()),
-        _ => Err(anyhow::anyhow!(
-            "匹配到了多个应用配置: {}, 请使用更明确的名称",
-            group_paths
-                .iter()
-                .map(|p| p.file_name().unwrap().to_string_lossy())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )),
-    }
+    Ok(matched_apps)
 }
 
-fn list_app_profiles() -> Vec<PathBuf> {
-    let workspace_dir = config::WorkspaceDir.as_path();
-    let mut groups = Vec::new();
+fn list_apps(config: &Config) -> anyhow::Result<Vec<PathBuf>> {
+    let workspace_dir = config.get_app_dir()?;
+    let mut apps = Vec::new();
 
     if let Ok(entries) = fs::read_dir(workspace_dir) {
         for entry in entries.flatten() {
             if let Ok(file_type) = entry.file_type() {
                 if file_type.is_dir() {
-                    groups.push(entry.path());
+                    apps.push(entry.path());
                 }
             }
         }
     }
 
-    groups
+    anyhow::Ok(apps)
 }

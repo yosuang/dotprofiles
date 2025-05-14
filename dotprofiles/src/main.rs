@@ -27,14 +27,17 @@ enum SubCommand {
 
 fn main() {
     let cli = Cli::parse();
-    let config = config::parse_config();
+    let config = config::parse_config().unwrap_or_else(|e| {
+        eprintln!("{e}");
+        process::exit(1);
+    });
 
     init_logger(&config);
 
     debug!("{config:?}");
     debug!("{cli:?}");
 
-    if let Err(e) = run(cli) {
+    if let Err(e) = run(cli, &config) {
         eprintln!("{e}");
         process::exit(1);
     }
@@ -53,10 +56,10 @@ fn init_logger(configuration: &Config) {
     builder.init();
 }
 
-fn run(cli: Cli) -> anyhow::Result<()> {
+fn run(cli: Cli, config: &Config) -> anyhow::Result<()> {
     match cli.command {
-        SubCommand::Pkg(pkg) => pkg::run_package(pkg, &config::parse_config()),
-        SubCommand::Apply(cmd) => apply::run_apply(cmd),
-        SubCommand::List(cmd) => list::run_list(cmd),
+        SubCommand::Pkg(pkg) => pkg::run_package(pkg, config),
+        SubCommand::Apply(cmd) => apply::run_apply(cmd, config),
+        SubCommand::List(cmd) => list::run_list(cmd, config),
     }
 }

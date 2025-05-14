@@ -11,7 +11,7 @@ pub trait PackageManage {
     fn show_version(&self);
 }
 
-pub fn build_package_manager(config: &Config) -> anyhow::Result<impl PackageManage, anyhow::Error> {
+pub fn build_package_manager(config: &Config) -> anyhow::Result<impl PackageManage> {
     if let Some(pm_name) = config.package_manager.as_ref() {
         if pm_name.eq_ignore_ascii_case("scoop") {
             return Ok(Scoop::new(
