@@ -41,12 +41,19 @@ fn apply_profiles_of(app_path: impl AsRef<Path>, _config: &Config) -> anyhow::Re
     }
 
     let current_dir = std::env::current_dir()?;
-    for entry in fs::read_dir(app_path)? {
+    copy_dir_all(app_path, &current_dir)?;
+    Ok(())
+}
+
+fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> anyhow::Result<()> {
+    fs::create_dir_all(&dst)?;
+    for entry in fs::read_dir(src)? {
         let entry = entry?;
-        let path = entry.path();
-        if path.is_file() {
-            let dest_path = current_dir.join(entry.file_name());
-            fs::copy(path, dest_path)?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            copy_dir_all(entry.path(), dst.as_ref().join(entry.file_name()))?;
+        } else {
+            fs::copy(entry.path(), dst.as_ref().join(entry.file_name()))?;
         }
     }
     Ok(())
