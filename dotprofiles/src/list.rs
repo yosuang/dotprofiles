@@ -8,15 +8,25 @@ pub struct ListSubCommand {
 
 pub fn run_list(cmd: ListSubCommand, config: &Config) -> anyhow::Result<()> {
     let app_dir = config.get_app_dir()?;
-    std::fs::read_dir(app_dir)?
-        .filter_map(|entry| entry.ok())
-        .filter(|entry| entry.file_type().map(|ft| ft.is_dir()).unwrap_or(false))
-        .filter(|entry| {
-            let dir_name = entry.file_name().to_string_lossy().to_lowercase();
-            cmd.app
-                .as_ref()
-                .map_or(true, |app| dir_name.contains(&app.to_lowercase()))
+    let entries: Vec<_> = std::fs::read_dir(app_dir)?
+        .filter_map(Result::ok)
+        .filter(|e| e.file_type().map_or(false, |ft| ft.is_dir()))
+        .filter(|e| {
+            cmd.app.as_ref().map_or(true, |app_name| {
+                e.file_name()
+                    .to_string_lossy()
+                    .to_lowercase()
+                    .contains(&app_name.to_lowercase())
+            })
         })
-        .for_each(|entry| println!("{}", entry.file_name().to_string_lossy()));
+        .collect();
+
+    if entries.is_empty() {
+        println!("No apps found");
+    } else {
+        entries
+            .iter()
+            .for_each(|e| println!("{}", e.file_name().to_string_lossy()));
+    }
     Ok(())
 }

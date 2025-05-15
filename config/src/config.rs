@@ -51,6 +51,8 @@ impl Config {
             .root_dir
             .as_ref()
             .ok_or_else(|| anyhow!("Root directory is not set"))?;
-        Ok(PathBuf::from(root).join("apps"))
+        let app_dir = PathBuf::from(root).join("apps");
+        fs::create_dir_all(&app_dir)?;
+        Ok(app_dir)
     }
 }

@@ -13,7 +13,7 @@ pub fn run_apply(cmd: ApplySubCommand, config: &Config) -> anyhow::Result<()> {
     let matched_apps = find_app(&cmd.app, config)?;
     let app = match matched_apps.len() {
         0 => {
-            println!("No matched app");
+            println!("No apps matched");
             None
         }
         1 => matched_apps.into_iter().next(),
